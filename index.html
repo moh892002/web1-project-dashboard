@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>StudyBuddy</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header>
+      <div class="topbar">
+        <h1 class="logo">StudyBuddy</h1>
+        <button id="menuBtn">☰</button>
+      </div>
+
+      <nav id="navMenu">
+        <a href="#dashboard" class="active">Dashboard</a>
+        <a href="#tasks">Tasks</a>
+        <a href="#habits">Habits</a>
+        <a href="#resources">Resources</a>
+        <a href="#settings">Settings</a>
+      </nav>
+    </header>
+
+    <main>
+      <section id="dashboard" class="page active"></section>
+
+      <section id="tasks" class="page">
+        <h2>Tasks</h2>
+
+        <form id="taskForm">
+          <input type="text" id="title" placeholder="Title" required />
+          <input type="date" id="dueDate" required />
+
+          <select id="priority">
+            <option>Low</option>
+            <option>Medium</option>
+            <option>High</option>
+          </select>
+
+          <input type="text" id="category" placeholder="Category" />
+
+          <button>Add Task</button>
+        </form>
+
+        <div id="tasksList"></div>
+      </section>
+
+      <section id="habits" class="page">
+        <h2>Habits</h2>
+
+        <form id="habitForm">
+          <input id="habitName" placeholder="Habit name" required />
+          <input type="number" id="goal" min="1" max="7" required />
+          <button>Add Habit</button>
+        </form>
+
+        <div id="habitsList"></div>
+      </section>
+
+      <section id="resources" class="page">
+        <h2>Resources</h2>
+        <input id="search" placeholder="Search..." />
+        <div id="resourcesList"></div>
+      </section>
+
+      <section id="settings" class="page">
+        <h2>Settings</h2>
+        <button id="themeToggle">Toggle Theme</button>
+        <button id="resetData">Reset All Data</button>
+
+        <p>StudyBuddy SPA – by Mohammed Bader</p>
+      </section>
+    </main>
+
+    <footer>
+      <p>&copy; 2023 StudyBuddy - by Mohammed Bader</p>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>

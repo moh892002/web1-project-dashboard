@@ -1,0 +1,23 @@
+[
+  {
+    "id":1,
+    "title":"MDN JavaScript",
+    "category":"Programming",
+    "link":"https://developer.mozilla.org",
+    "description":"JS docs"
+  },
+  {
+    "id":2,
+    "title":"CSS Tricks",
+    "category":"Design",
+    "link":"https://css-tricks.com",
+    "description":"CSS tips"
+  },
+  {
+    "id":3,
+    "title":"FreeCodeCamp",
+    "category":"Learning",
+    "link":"https://freecodecamp.org",
+    "description":"Courses"
+  }
+]
