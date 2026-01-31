@@ -201,6 +201,24 @@ button:active {
   cursor: pointer;
 }
 
+.habitsList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.habit-checkboxes {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.habit-checkboxes input[type="checkbox"] {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
+
 /* Dashboard */
 #dashboard {
   display: grid;

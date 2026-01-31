@@ -278,6 +278,8 @@ function renderHabits() {
     `;
   });
 }
+console.log(habits);
+
 
 habitsList.addEventListener("click", (e) => {
   if (!e.target.dataset.habit) return;
