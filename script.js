@@ -137,7 +137,8 @@ function renderHabits() {
 
     habitsList.innerHTML += `
       <div class="card">
-        <b>${h.name}</b> (${count}/${h.goal})<br>
+        <b>${h.name}</b> (${count}/${h.goal})
+        <div class="habit-checkboxes">
         ${h.progress
           .map(
             (p, i) => `
@@ -148,10 +149,13 @@ function renderHabits() {
         `,
           )
           .join("")}
+        </div>
       </div>
     `;
   });
 }
+console.log(habits);
+
 
 habitsList.addEventListener("click", (e) => {
   if (!e.target.dataset.habit) return;

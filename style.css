@@ -35,7 +35,6 @@ header {
   align-items: center;
 }
 
-
 .topbar {
   display: flex;
   justify-content: space-between;
@@ -125,6 +124,24 @@ button {
   margin: 10px 0;
 }
 
+.habitsList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.habit-checkboxes {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.habit-checkboxes input[type="checkbox"] {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
+
 #dashboard {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
@@ -145,11 +162,11 @@ footer {
     flex-direction: column;
     align-items: flex-start;
   }
-  
+
   #menuBtn {
     display: block;
   }
-  
+
   nav {
     display: none;
     flex-direction: column;
