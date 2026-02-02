@@ -187,17 +187,23 @@ function renderDashboard() {
       <div class="progress-bar">
         <div class="progress-fill" style="width: ${progress}%"></div>
       </div>
-      <p>${done}/${total} Tasks Completed (${progress}%)</p>
+      <p>${done}/${total} Tasks Completed</p>
     </div>
 
     <!-- Stats -->
-    <div class="card">Tasks Due Soon: ${dueSoon}</div>
-    <div class="card">Completed Tasks: ${done}</div>
+    <div class="card">
+    <h3>Tasks Due Soon:</h3>
+     <h5>${dueSoon}</h5>
+     </div>
+    <div class="card">
+    <h3>Completed Tasks:</h3>
+     <h5>${done}</h5>
+     </div>
 
     <!-- Today's Habits -->
-    <div class="card habits-streak">
+    <div class="card">
       <h3>Today</h3>
-      <p>Habits Streak: ${todayHabitsCompleted}/${habits.length}</p>
+      <p>Habits Streak: <h5>${todayHabitsCompleted}/${habits.length}</h5></p>
     </div>
   `;
 
@@ -325,7 +331,7 @@ function renderResources(list) {
       <div class="card">
         <b>${r.title}</b><br>
         ${r.category}<br>
-        <a href="${r.link}" target="_blank"><i class="fas fa-external-link-alt"></i> Open</a>
+        <a href="${r.link}" target="_blank" style="text-decoration: none;">Open</a>
       </div>
     `;
   });
