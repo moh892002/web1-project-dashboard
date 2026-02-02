@@ -19,5 +19,75 @@
     "category":"Learning",
     "link":"https://freecodecamp.org",
     "description":"Courses"
+  },
+  {
+    "id":4,
+    "title":"Stack Overflow",
+    "category":"Programming",
+    "link":"https://stackoverflow.com",
+    "description":"Q&A for programmers"
+  },
+  {
+    "id":5,
+    "title":"W3Schools",
+    "category":"Learning",
+    "link":"https://w3schools.com",
+    "description":"Web tutorials"
+  },
+  {
+    "id":6,
+    "title":"Smashing Magazine",
+    "category":"Design",
+    "link":"https://smashingmagazine.com",
+    "description":"Web design articles"
+  },
+  {
+    "id":7,
+    "title":"GitHub",
+    "category":"Programming",
+    "link":"https://github.com",
+    "description":"Code hosting"
+  },
+  {
+    "id":8,
+    "title":"CodePen",
+    "category":"Design",
+    "link":"https://codepen.io",
+    "description":"Front-end playground"
+  },
+  {
+    "id":9,
+    "title":"HackerRank",
+    "category":"Learning",
+    "link":"https://hackerrank.com",
+    "description":"Coding challenges"
+  },
+  {
+    "id":10,
+    "title":"A List Apart",
+    "category":"Design",
+    "link":"https://alistapart.com",
+    "description":"Web standards"
+  },
+  {
+    "id":11,
+    "title":"Mozilla Hacks",
+    "category":"Programming",
+    "link":"https://hacks.mozilla.org",
+    "description":"Web development blog"
+  },
+  {
+    "id":12,
+    "title":"Frontend Mentor",
+    "category":"Learning",
+    "link":"https://frontendmentor.io",
+    "description":"Frontend challenges"
+  },
+  {
+    "id":13,
+    "title":"Dev.to",
+    "category":"Programming",
+    "link":"https://dev.to",
+    "description":"Developer community"
   }
 ]

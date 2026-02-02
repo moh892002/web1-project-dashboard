@@ -18,8 +18,19 @@ links.forEach((link) => {
     links.forEach((l) => l.classList.remove("active"));
     link.classList.add("active");
 
-    pages.forEach((p) => p.classList.remove("active"));
-    document.querySelector(link.getAttribute("href")).classList.add("active");
+    pages.forEach((p) => {
+      p.classList.remove("active");
+      if (p.id === "dashboard") {
+        p.innerHTML = "";
+      }
+    });
+
+    const targetPage = document.querySelector(link.getAttribute("href"));
+    targetPage.classList.add("active");
+
+    if (targetPage.id === "dashboard") {
+      renderDashboard();
+    }
   });
 });
 
@@ -56,22 +67,60 @@ function saveTasks() {
 }
 
 function renderTasks() {
+  const filterStatus = document.getElementById("filterStatus")?.value || "all";
+  const filterPriority = document.getElementById("filterPriority")?.value || "all";
+  const sortBy = document.getElementById("sortBy")?.value || "date";
+  const sortOrder = document.getElementById("sortOrder")?.value || "asc";
+
+  let filteredTasks = tasks.filter(t => {
+    if (filterStatus === "pending" && t.completed) return false;
+    if (filterStatus === "completed" && !t.completed) return false;
+
+    if (filterPriority !== "all" && t.priority !== filterPriority) return false;
+
+    return true;
+  });
+
+  filteredTasks.sort((a, b) => {
+    let comparison = 0;
+    if (sortBy === "date") {
+      comparison = new Date(a.dueDate) - new Date(b.dueDate);
+    } else if (sortBy === "priority") {
+      const priorityOrder = { "High": 3, "Medium": 2, "Low": 1 };
+      comparison = priorityOrder[a.priority] - priorityOrder[b.priority];
+    } else if (sortBy === "title") {
+      comparison = a.title.localeCompare(b.title);
+    }
+    return sortOrder === "asc" ? comparison : -comparison;
+  });
+
+
   tasksList.innerHTML = "";
 
-  tasks.forEach((t) => {
+  if (filteredTasks.length === 0) {
+    tasksList.innerHTML = "<p class='no-tasks'>No tasks found</p>";
+    return;
+  }
+
+  filteredTasks.forEach((t) => {
     tasksList.innerHTML += `
-      <div class="card">
+      <div class="card ${t.completed ? 'completed' : ''}">
         <b>${t.title}</b> - ${t.dueDate}<br><br>
-       priority: ${t.priority} <br><br>
-       category: ${t.category || "General"}<br><br>
+        Priority: ${t.priority} <br><br>
+        Category: ${t.category || "General"}<br><br>
         <button class="complete-btn" data-complete="${t.id}">
-          ${t.completed ? "Undo" : "Complete"}
+          <i class="fas fa-check"></i> ${t.completed ? "Undo" : "Complete"}
         </button>
-        <button class="delete-btn" data-delete="${t.id}">Delete</button>
+        <button class="delete-btn" data-delete="${t.id}"><i class="fas fa-trash"></i></button>
       </div>
     `;
   });
 }
+
+document.getElementById("filterStatus")?.addEventListener("change", renderTasks);
+document.getElementById("filterPriority")?.addEventListener("change", renderTasks);
+document.getElementById("sortBy")?.addEventListener("change", renderTasks);
+document.getElementById("sortOrder")?.addEventListener("change", renderTasks);
 
 tasksList.addEventListener("click", (e) => {
   if (e.target.dataset.complete) {
@@ -96,14 +145,77 @@ function deleteTask(id) {
 }
 
 function renderDashboard() {
+  const dashboard = document.getElementById("dashboard");
+
+  if (!dashboard.classList.contains("active")) {
+    return;
+  }
+
   const total = tasks.length;
   const done = tasks.filter((t) => t.completed).length;
+  const progress = total ? Math.round((done / total) * 100) : 0;
 
-  document.getElementById("dashboard").innerHTML = `
-    <div class="card">Total Tasks: ${total}</div>
-    <div class="card">Completed: ${done}</div>
-    <div class="card">Progress: ${total ? Math.round((done / total) * 100) : 0}%</div>
+  const today = new Date().toISOString().split('T')[0];
+  const twoDaysLater = new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+  const dueSoon = tasks.filter(t => !t.completed && t.dueDate >= today && t.dueDate <= twoDaysLater).length;
+
+  const todayIndex = new Date().getDay();
+  let todayHabitsCompleted = 0;
+  habits.forEach(h => {
+    if (h.progress[todayIndex]) todayHabitsCompleted++;
+  });
+
+  dashboard.innerHTML = `
+    <!-- Quick Add Task -->
+    <div class="card quick-add">
+      <h3>Quick Add Task</h3>
+      <form id="quickTaskForm">
+        <input type="text" id="quickTitle" placeholder="Task Title" required />
+        <input type="date" id="quickDueDate" required />
+        <button type="submit"><i class="fas fa-plus"></i></button>
+      </form>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="card progress-card">
+      <h3>Progress</h3>
+      <div class="progress-bar">
+        <div class="progress-fill" style="width: ${progress}%"></div>
+      </div>
+      <p>${done}/${total} Tasks Completed (${progress}%)</p>
+    </div>
+
+    <!-- Stats -->
+    <div class="card">Tasks Due Soon: ${dueSoon}</div>
+    <div class="card">Completed Tasks: ${done}</div>
+
+    <!-- Today's Habits -->
+    <div class="card habits-streak">
+      <h3>Today</h3>
+      <p>Habits Streak: ${todayHabitsCompleted}/${habits.length}</p>
+    </div>
   `;
+
+  const quickTaskForm = document.getElementById("quickTaskForm");
+  quickTaskForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const title = document.getElementById("quickTitle").value;
+    const dueDate = document.getElementById("quickDueDate").value;
+
+    if (!title || !dueDate) return;
+
+    tasks.push({
+      id: Date.now(),
+      title,
+      dueDate,
+      priority: "Medium",
+      category: "",
+      completed: false,
+    });
+
+    saveTasks();
+    quickTaskForm.reset();
+  });
 }
 
 const habitForm = document.getElementById("habitForm");
@@ -179,29 +291,58 @@ fetch("resources.json")
   .then((r) => r.json())
   .then((data) => {
     resources = data;
+    populateCategoryFilter(data);
     renderResources(data);
   })
   .catch(() => {
     resourcesList.innerHTML = "<p>Failed to load resources</p>";
   });
 
+function populateCategoryFilter(data) {
+  const categories = [...new Set(data.map(r => r.category))];
+  const filterCategory = document.getElementById("filterCategory");
+  categories.forEach(cat => {
+    const option = document.createElement("option");
+    option.value = cat;
+    option.textContent = cat;
+    filterCategory.appendChild(option);
+  });
+}
+
 function renderResources(list) {
+  const searchTerm = searchInput.value.toLowerCase();
+  const categoryFilter = document.getElementById("filterCategory").value;
+
+  const filteredResources = list.filter(r => {
+    const matchesSearch = r.title.toLowerCase().includes(searchTerm);
+    const matchesCategory = categoryFilter === "all" || r.category === categoryFilter;
+    return matchesSearch && matchesCategory;
+  });
+
   resourcesList.innerHTML = "";
 
-  list.forEach((r) => {
+  if (filteredResources.length === 0) {
+    resourcesList.innerHTML = "<p class='no-resources'>No resources found</p>";
+    return;
+  }
+
+  filteredResources.forEach((r) => {
     resourcesList.innerHTML += `
       <div class="card">
         <b>${r.title}</b><br>
         ${r.category}<br>
-        <a href="${r.link}" target="_blank">Open</a>
+        <a href="${r.link}" target="_blank"><i class="fas fa-external-link-alt"></i> Open</a>
       </div>
     `;
   });
 }
 
 searchInput.addEventListener("input", () => {
-  const q = searchInput.value.toLowerCase();
-  renderResources(resources.filter((r) => r.title.toLowerCase().includes(q)));
+  renderResources(resources);
+});
+
+document.getElementById("filterCategory").addEventListener("change", () => {
+  renderResources(resources);
 });
 
 const themeToggle = document.getElementById("themeToggle");

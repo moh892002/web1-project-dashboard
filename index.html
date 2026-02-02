@@ -5,20 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>StudyBuddy</title>
     <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   </head>
   <body>
     <header>
       <div class="topbar">
-        <h1 class="logo">StudyBuddy</h1>
-        <button id="menuBtn">☰</button>
+        <h1 class="logo"><i class="fas fa-graduation-cap"></i> Moha</h1>
+        <button id="menuBtn"><i class="fas fa-bars"></i></button>
       </div>
 
       <nav id="navMenu">
-        <a href="#dashboard" class="active">Dashboard</a>
-        <a href="#tasks">Tasks</a>
-        <a href="#habits">Habits</a>
-        <a href="#resources">Resources</a>
-        <a href="#settings">Settings</a>
+        <a href="#dashboard" class="active"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+        <a href="#tasks"><i class="fas fa-tasks"></i> Tasks</a>
+        <a href="#habits"><i class="fas fa-check-circle"></i> Habits</a>
+        <a href="#resources"><i class="fas fa-book"></i> Resources</a>
+        <a href="#settings"><i class="fas fa-cog"></i> Settings</a>
       </nav>
     </header>
 
@@ -26,7 +27,7 @@
       <section id="dashboard" class="page active"></section>
 
       <section id="tasks" class="page">
-        <h2>Tasks</h2>
+        <h2><i class="fas fa-tasks"></i> Tasks</h2>
 
         <form id="taskForm">
           <input type="text" id="title" placeholder="Title" required />
@@ -40,41 +41,82 @@
 
           <input type="text" id="category" placeholder="Category" />
 
-          <button>Add Task</button>
+          <button><i class="fas fa-plus"></i> Add Task</button>
         </form>
+
+        <div class="filter-sort-controls">
+          <div class="filter-group">
+            <label>Filter:</label>
+            <select id="filterStatus">
+              <option value="all">All</option>
+              <option value="pending">Pending</option>
+              <option value="completed">Completed</option>
+            </select>
+            <select id="filterPriority">
+              <option value="all">All Priorities</option>
+              <option value="High">High</option>
+              <option value="Medium">Medium</option>
+              <option value="Low">Low</option>
+            </select>
+          </div>
+          <div class="sort-group">
+            <label>Sort:</label>
+            <select id="sortBy">
+              <option value="date">Due Date</option>
+              <option value="priority">Priority</option>
+              <option value="title">Title</option>
+            </select>
+            <select id="sortOrder">
+              <option value="asc">Ascending</option>
+              <option value="desc">Descending</option>
+            </select>
+          </div>
+        </div>
 
         <div id="tasksList"></div>
       </section>
 
       <section id="habits" class="page">
-        <h2>Habits</h2>
+        <h2><i class="fas fa-check-circle"></i> Habits</h2>
 
         <form id="habitForm">
           <input id="habitName" placeholder="Habit name" required />
-          <input type="number" id="goal" min="1" max="7" required />
-          <button>Add Habit</button>
+          <input type="number" id="goal" min="1" max="7" required placeholder="number of days"/>
+          <button><i class="fas fa-plus"></i> Add Habit</button>
         </form>
 
         <div id="habitsList"></div>
       </section>
 
       <section id="resources" class="page">
-        <h2>Resources</h2>
-        <input id="search" placeholder="Search..." />
+        <h2><i class="fas fa-book"></i> Resources</h2>
+        <div class="resource-controls">
+          <input id="search" placeholder="Search..." />
+          <select id="filterCategory">
+            <option value="all">All Categories</option>
+          </select>
+        </div>
         <div id="resourcesList"></div>
       </section>
 
       <section id="settings" class="page">
-        <h2>Settings</h2>
-        <button id="themeToggle">Toggle Theme</button>
-        <button id="resetData">Reset All Data</button>
+        <h2><i class="fas fa-cog"></i> Settings</h2>
+        <button id="themeToggle"><i class="fas fa-moon"></i> Toggle Theme</button>
+        <button id="resetData"><i class="fas fa-trash-alt"></i> Reset All Data</button>
 
-        <p>StudyBuddy SPA – by Mohammed Bader</p>
+        <div class="about-section">
+          <h3>About</h3>
+          <div class="card about-card">
+            <p><strong>Project Description:</strong></p>
+            <p>StudyBuddy is a single-page web application that helps students organize their study life. It provides tools for managing daily tasks, tracking positive habits, and saving educational resources.</p>
+            <p><strong>Student Name:</strong> Mohammed Bader</p>
+          </div>
+        </div>
       </section>
     </main>
 
     <footer>
-      <p>&copy; 2023 StudyBuddy - by Mohammed Bader</p>
+      <p>&copy; 2026 Moha - by Mohammed Bader</p>
     </footer>
 
     <script src="script.js"></script>
