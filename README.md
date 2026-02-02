@@ -1,7 +1,7 @@
-# StudyBuddy - Study Management App
+# Moha - Study Management App
 
 ## Project Description
-StudyBuddy is a single-page web application (SPA) that helps students organize their study life. The app provides tools for managing daily tasks, tracking positive habits, and saving favorite educational resources.
+Moha is a single-page web application (SPA) that helps students organize their study life. The app provides tools for managing daily tasks, tracking positive habits, and saving favorite educational resources.
 
 ## Features
 - **Dashboard**: View a summary of tasks and completion percentage with:
