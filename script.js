@@ -1,6 +1,8 @@
+// Data Lists
 let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 let habits = JSON.parse(localStorage.getItem("habits")) || [];
-let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+let resources = [];
+
 
 const pages = document.querySelectorAll(".page");
 const links = document.querySelectorAll("nav a");
@@ -12,7 +14,6 @@ menuBtn.onclick = () => navMenu.classList.toggle("show");
 links.forEach((link) => {
   link.addEventListener("click", (e) => {
     e.preventDefault();
-
     navMenu.classList.remove("show");
 
     links.forEach((l) => l.classList.remove("active"));
@@ -34,6 +35,7 @@ links.forEach((link) => {
   });
 });
 
+// Tasks
 const taskForm = document.getElementById("taskForm");
 const tasksList = document.getElementById("tasksList");
 
@@ -72,12 +74,10 @@ function renderTasks() {
   const sortBy = document.getElementById("sortBy")?.value || "date";
   const sortOrder = document.getElementById("sortOrder")?.value || "asc";
 
-  let filteredTasks = tasks.filter(t => {
+  let filteredTasks = tasks.filter((t) => {
     if (filterStatus === "pending" && t.completed) return false;
     if (filterStatus === "completed" && !t.completed) return false;
-
     if (filterPriority !== "all" && t.priority !== filterPriority) return false;
-
     return true;
   });
 
@@ -86,14 +86,13 @@ function renderTasks() {
     if (sortBy === "date") {
       comparison = new Date(a.dueDate) - new Date(b.dueDate);
     } else if (sortBy === "priority") {
-      const priorityOrder = { "High": 3, "Medium": 2, "Low": 1 };
+      const priorityOrder = { High: 3, Medium: 2, Low: 1 };
       comparison = priorityOrder[a.priority] - priorityOrder[b.priority];
     } else if (sortBy === "title") {
       comparison = a.title.localeCompare(b.title);
     }
     return sortOrder === "asc" ? comparison : -comparison;
   });
-
 
   tasksList.innerHTML = "";
 
@@ -104,7 +103,7 @@ function renderTasks() {
 
   filteredTasks.forEach((t) => {
     tasksList.innerHTML += `
-      <div class="card ${t.completed ? 'completed' : ''}">
+      <div class="card ${t.completed ? "completed" : ""}">
         <b>${t.title}</b> - ${t.dueDate}<br><br>
         Priority: ${t.priority} <br><br>
         Category: ${t.category || "General"}<br><br>
@@ -116,20 +115,6 @@ function renderTasks() {
     `;
   });
 }
-
-document.getElementById("filterStatus")?.addEventListener("change", renderTasks);
-document.getElementById("filterPriority")?.addEventListener("change", renderTasks);
-document.getElementById("sortBy")?.addEventListener("change", renderTasks);
-document.getElementById("sortOrder")?.addEventListener("change", renderTasks);
-
-tasksList.addEventListener("click", (e) => {
-  if (e.target.dataset.complete) {
-    toggleTask(Number(e.target.dataset.complete));
-  }
-  if (e.target.dataset.delete) {
-    deleteTask(Number(e.target.dataset.delete));
-  }
-});
 
 function toggleTask(id) {
   const t = tasks.find((task) => task.id === id);
@@ -144,6 +129,22 @@ function deleteTask(id) {
   saveTasks();
 }
 
+// Tasks: Event Listeners
+document.getElementById("filterStatus")?.addEventListener("change", renderTasks);
+document.getElementById("filterPriority")?.addEventListener("change", renderTasks);
+document.getElementById("sortBy")?.addEventListener("change", renderTasks);
+document.getElementById("sortOrder")?.addEventListener("change", renderTasks);
+
+tasksList.addEventListener("click", (e) => {
+  if (e.target.dataset.complete) {
+    toggleTask(Number(e.target.dataset.complete));
+  }
+  if (e.target.dataset.delete) {
+    deleteTask(Number(e.target.dataset.delete));
+  }
+});
+
+// Dashboard
 function renderDashboard() {
   const dashboard = document.getElementById("dashboard");
 
@@ -155,13 +156,17 @@ function renderDashboard() {
   const done = tasks.filter((t) => t.completed).length;
   const progress = total ? Math.round((done / total) * 100) : 0;
 
-  const today = new Date().toISOString().split('T')[0];
-  const twoDaysLater = new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
-  const dueSoon = tasks.filter(t => !t.completed && t.dueDate >= today && t.dueDate <= twoDaysLater).length;
+  const today = new Date().toISOString().split("T")[0];
+  const twoDaysLater = new Date(Date.now() + 2 * 24 * 60 * 60 * 1000)
+    .toISOString()
+    .split("T")[0];
+  const dueSoon = tasks.filter(
+    (t) => !t.completed && t.dueDate >= today && t.dueDate <= twoDaysLater
+  ).length;
 
   const todayIndex = new Date().getDay();
   let todayHabitsCompleted = 0;
-  habits.forEach(h => {
+  habits.forEach((h) => {
     if (h.progress[todayIndex]) todayHabitsCompleted++;
   });
 
@@ -218,6 +223,7 @@ function renderDashboard() {
   });
 }
 
+// Habits
 const habitForm = document.getElementById("habitForm");
 const habitsList = document.getElementById("habitsList");
 
@@ -254,9 +260,9 @@ function renderHabits() {
         ${h.progress
           .map(
             (p, i) => `
-          <input type="checkbox" 
-            data-habit="${h.id}" 
-            data-day="${i}" 
+          <input type="checkbox"
+            data-habit="${h.id}"
+            data-day="${i}"
             ${p ? "checked" : ""}>
         `,
           )
@@ -266,8 +272,6 @@ function renderHabits() {
     `;
   });
 }
-console.log(habits);
-
 
 habitsList.addEventListener("click", (e) => {
   if (!e.target.dataset.habit) return;
@@ -283,25 +287,14 @@ habitsList.addEventListener("click", (e) => {
   renderHabits();
 });
 
+// Resources
 const searchInput = document.getElementById("search");
 const resourcesList = document.getElementById("resourcesList");
-let resources = [];
-
-fetch("resources.json")
-  .then((r) => r.json())
-  .then((data) => {
-    resources = data;
-    populateCategoryFilter(data);
-    renderResources(data);
-  })
-  .catch(() => {
-    resourcesList.innerHTML = "<p>Failed to load resources</p>";
-  });
 
 function populateCategoryFilter(data) {
-  const categories = [...new Set(data.map(r => r.category))];
+  const categories = [...new Set(data.map((r) => r.category))];
   const filterCategory = document.getElementById("filterCategory");
-  categories.forEach(cat => {
+  categories.forEach((cat) => {
     const option = document.createElement("option");
     option.value = cat;
     option.textContent = cat;
@@ -313,9 +306,10 @@ function renderResources(list) {
   const searchTerm = searchInput.value.toLowerCase();
   const categoryFilter = document.getElementById("filterCategory").value;
 
-  const filteredResources = list.filter(r => {
+  const filteredResources = list.filter((r) => {
     const matchesSearch = r.title.toLowerCase().includes(searchTerm);
-    const matchesCategory = categoryFilter === "all" || r.category === categoryFilter;
+    const matchesCategory =
+      categoryFilter === "all" || r.category === categoryFilter;
     return matchesSearch && matchesCategory;
   });
 
@@ -337,6 +331,18 @@ function renderResources(list) {
   });
 }
 
+// Resources: Fetch and Filter
+fetch("resources.json")
+  .then((r) => r.json())
+  .then((data) => {
+    resources = data;
+    populateCategoryFilter(data);
+    renderResources(data);
+  })
+  .catch(() => {
+    resourcesList.innerHTML = "<p>Failed to load resources</p>";
+  });
+
 searchInput.addEventListener("input", () => {
   renderResources(resources);
 });
@@ -345,6 +351,7 @@ document.getElementById("filterCategory").addEventListener("change", () => {
   renderResources(resources);
 });
 
+// Theme and Settings
 const themeToggle = document.getElementById("themeToggle");
 
 themeToggle.onclick = () => {
@@ -364,6 +371,7 @@ resetData.onclick = () => {
   location.reload();
 };
 
+//  Render
 renderTasks();
 renderHabits();
 renderDashboard();
